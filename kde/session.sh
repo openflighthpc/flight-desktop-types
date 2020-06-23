@@ -42,6 +42,7 @@ else
   echo "Unable to find KDE starter"
   exit 1
 fi
+flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc/types/gnome}"
 bg_image="${flight_DESKTOP_bg_image:-${flight_DESKTOP_root}/etc/assets/backgrounds/default.jpg}"
 if [ -f "${bg_image}" ]; then
   if [ -f /etc/redhat-release ] && grep -q 'release 7' /etc/redhat-release; then
@@ -50,7 +51,7 @@ if [ -f "${bg_image}" ]; then
     done
     echo "Sleeping [1/3]..."
     sleep 5
-    python "${flight_DESKTOP_root}"/etc/types/kde/set_kde_wallpaper.py "$bg_image" "$HOME"
+    python "${flight_DESKTOP_type_root}"/set_kde_wallpaper.py "$bg_image" "$HOME"
     echo "Sleeping [2/3]..."
     sleep 2
     kquitapp plasma-desktop

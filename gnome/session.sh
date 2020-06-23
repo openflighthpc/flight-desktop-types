@@ -99,14 +99,14 @@ install_background_script() {
     bg_sh="${destdir}/${f}"
     mkdir -p "${destdir}"
     sed -e "s,_IMAGE_,${bg_image},g" \
-        "${flight_DESKTOP_root}"/etc/types/gnome/${f}.tpl > "${bg_sh}"
+        "${flight_DESKTOP_type_root}"/${f}.tpl > "${bg_sh}"
     chmod 755 "${bg_sh}"
 
     f="flight-desktop_background.desktop"
     if ! xdg_config_search autostart/$f; then
       destdir="$(xdg_config_home)/autostart"
       mkdir -p "$destdir"
-      cp "${flight_DESKTOP_root}"/etc/types/gnome/${f}.tpl "${destdir}/${f}"
+      cp "${flight_DESKTOP_type_root}"/${f}.tpl "${destdir}/${f}"
       sed -i -e "s,_FLIGHT_DESKTOP_BACKGROUND_SH_,${bg_sh},g" "${destdir}/${f}"
     fi
   fi
@@ -120,7 +120,7 @@ install_geometry_script() {
     destdir="$(xdg_data_home)/flight/desktop/bin"
     geom_sh="${destdir}/${f}"
     mkdir -p "${destdir}"
-    cp "${flight_DESKTOP_root}"/etc/types/gnome/${f} "${geom_sh}"
+    cp "${flight_DESKTOP_type_root}"/${f} "${geom_sh}"
     chmod 755 "${geom_sh}"
   fi
 
@@ -128,7 +128,7 @@ install_geometry_script() {
   if ! xdg_config_search autostart/$f; then
     destdir="$(xdg_config_home)/autostart"
     mkdir -p "$destdir"
-    cp "${flight_DESKTOP_root}"/etc/types/gnome/${f}.tpl "${destdir}/${f}"
+    cp "${flight_DESKTOP_type_root}"/${f}.tpl "${destdir}/${f}"
     sed -i -e "s,_FLIGHT_DESKTOP_GEOMETRY_SH_,${geom_sh},g" "${destdir}/${f}"
   fi
 }
@@ -141,6 +141,8 @@ mark_initial_setup_done() {
     echo -n "yes" > "${setup_file}"
   fi
 }
+
+flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc/types/gnome}"
 
 install_geometry_script
 install_background_script

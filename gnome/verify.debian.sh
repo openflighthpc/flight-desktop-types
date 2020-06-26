@@ -43,6 +43,16 @@ if ! apt -qq --installed list gnome-session | grep -q gnome-session; then
   desktop_miss 'Package: gnome-session'
 fi
 
+desktop_stage "Package: xterm"
+if ! apt -qq --installed list xterm | grep -q xterm; then
+  desktop_miss 'Package: xterm'
+fi
+
+desktop_stage "Package: gnome-terminal"
+if ! apt -qq --installed list gnome-terminal | grep -q gnome-terminal; then
+  desktop_miss 'Package: gnome-terminal'
+fi
+
 desktop_stage "Package: evince"
 if ! apt -qq --installed list evince | grep -q evince; then
   desktop_miss 'Package: evince'

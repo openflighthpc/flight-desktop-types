@@ -67,6 +67,16 @@ if ! apt -qq --installed list gnome-session | grep -q gnome-session; then
   apt -y install gnome-session
 fi
 
+if ! apt -qq --installed list xterm | grep -q xterm; then
+  desktop_stage "Installing package: xterm"
+  apt -y install xterm
+fi
+
+if ! apt -qq --installed list gnome-terminal | grep -q gnome-terminal; then
+  desktop_stage "Installing package: gnome-terminal"
+  apt -y install gnome-terminal
+fi
+
 if ! apt -qq --installed list evince | grep -q evince; then
   desktop_stage "Installing package: evince"
   apt -y install evince

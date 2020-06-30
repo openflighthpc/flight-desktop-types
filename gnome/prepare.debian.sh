@@ -27,6 +27,25 @@
 # ==============================================================================
 set -e
 
+disable_gnome_screenlock() {
+  mkdir -p /etc/dconf/db/local.d
+  cat <<EOF > /etc/dconf/db/local.d/00-flight-disable-gnome-screenlock
+[org/gnome/desktop/session]
+idle-delay=uint32 0
+[org/gnome/desktop/screensaver]
+lock-enabled=false
+lock-delay=uint32 0
+EOF
+  if [ ! -f /etc/dconf/profile/user ]; then
+    mkdir -p /etc/dconf/profile
+    cat <<EOF > /etc/dconf/profile/user
+user-db:user
+system-db:local
+EOF
+  fi
+  dconf update
+}
+
 set_policies() {
   local group=$1
   # disable authentication prompts for admin users
@@ -65,6 +84,11 @@ fi
 if ! apt -qq --installed list gnome-session | grep -q gnome-session; then
   desktop_stage "Installing package: gnome-session"
   apt -y install gnome-session
+fi
+
+if [ -x /usr/bin/dconf -a ! -f /etc/dconf/db/local.d/00-flight-disable-gnome-screenlock ]; then
+  desktop_stage "Disabling GNOME screensaver locking"
+  disable_gnome_screenlock
 fi
 
 if ! apt -qq --installed list xterm | grep -q xterm; then

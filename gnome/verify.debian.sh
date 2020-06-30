@@ -43,6 +43,13 @@ if ! apt -qq --installed list gnome-session | grep -q gnome-session; then
   desktop_miss 'Package: gnome-session'
 fi
 
+if [ -x /usr/bin/dconf ]; then
+  desktop_stage "Prerequisite: GNOME screensaver disabled"
+  if [ ! -f /etc/dconf/db/local.d/00-flight-disable-gnome-screenlock ]; then
+    desktop_miss 'Configuration: GNOME screensaver is not disabled'
+  fi
+fi
+
 desktop_stage "Package: xterm"
 if ! apt -qq --installed list xterm | grep -q xterm; then
   desktop_miss 'Package: xterm'

@@ -78,6 +78,13 @@ if ! contains 'GNOME' "${groups[@]}"; then
   desktop_miss 'Package group: GNOME'
 fi
 
+if [ -x /usr/bin/dconf ]; then
+  desktop_stage "Prerequisite: GNOME screensaver disabled"
+  if [ ! -f /etc/dconf/db/local.d/00-flight-disable-gnome-screenlock ]; then
+    desktop_miss 'Configuration: GNOME screensaver is not disabled'
+  fi
+fi
+
 desktop_stage "Package: evince"
 if ! rpm -qa evince | grep -q evince; then
   desktop_miss 'Package: evince'

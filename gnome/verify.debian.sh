@@ -34,8 +34,12 @@ if ! apt -qq --installed list xauth | grep -q xauth; then
 fi
 
 desktop_stage "Prerequisite: polkit policies"
-if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/20-flight-desktop-gnome.pkla ]; then
-  desktop_miss 'Configuration: polkit policies'
+if [ "$UID" == 0 ]; then
+  if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/20-flight-desktop-gnome.pkla ]; then
+    desktop_miss 'Configuration: polkit policies'
+  fi
+else
+  desktop_miss 'Configuration: users are unable to verify polkit policies'
 fi
 
 desktop_stage "Package: gnome-session"
@@ -58,6 +62,11 @@ fi
 desktop_stage "Package: gnome-terminal"
 if ! apt -qq --installed list gnome-terminal | grep -q gnome-terminal; then
   desktop_miss 'Package: gnome-terminal'
+fi
+
+desktop_stage "Package: fonts-noto-color-emoji"
+if ! apt -qq --installed list fonts-noto-color-emoji | grep -q fonts-noto-color-emoji; then
+  desktop_miss 'Package: fonts-noto-color-emoji'
 fi
 
 desktop_stage "Package: evince"

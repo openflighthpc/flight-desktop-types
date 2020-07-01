@@ -101,6 +101,11 @@ if ! apt -qq --installed list gnome-terminal | grep -q gnome-terminal; then
   apt -y install gnome-terminal
 fi
 
+if ! apt -qq --installed list fonts-noto-color-emoji | grep -q fonts-noto-color-emoji; then
+  desktop_stage "Installing package: fonts-noto-color-emoji"
+  apt -y install fonts-noto-color-emoji
+fi
+
 if ! apt -qq --installed list evince | grep -q evince; then
   desktop_stage "Installing package: evince"
   apt -y install evince

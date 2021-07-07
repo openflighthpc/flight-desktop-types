@@ -25,13 +25,7 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
-# Give a bit *less* time for the desktop to start up properly
-echo "Preparing to launch: $@"
-sleep 10
-
 echo "Launching: $@"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-export DISPLAY="$1"
-cd "$3"
-# NOTE: $2 is the index of the current application being launched and
-gnome-terminal -- "${@:4}"
+# NOTE: $1 is the index of the current application being launched and
+gnome-terminal -- "${@:2}"

@@ -25,6 +25,7 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
+echo "Launching: $@"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 export DISPLAY="$1"
 # NOTE: $2 is the index of the current application being launched and

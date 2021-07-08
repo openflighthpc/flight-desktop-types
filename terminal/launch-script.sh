@@ -27,6 +27,12 @@
 
 set -x
 
+# Confirm screen is present
+if ! which screen; then
+  echo Can not launch the script without screen! >&2
+  exit 1
+fi
+
 # Give a moment for the terminal to load
 sleep 10
 

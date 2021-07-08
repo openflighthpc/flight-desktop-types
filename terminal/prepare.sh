@@ -43,9 +43,4 @@ if ! rpm -qa xterm | grep -q xterm; then
   yum -y install xterm
 fi
 
-if ! rpm -qa screen | grep -q screen; then
-  desktop_stage "Installing package: screen"
-  yum -y install screen
-fi
-
 desktop_stage "Prequisites met"

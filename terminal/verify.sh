@@ -42,3 +42,8 @@ desktop_stage "Package: xterm"
 if ! rpm -qa xterm | grep -q xterm; then
   desktop_miss 'Package: xterm'
 fi
+
+desktop_stage "Package: screen"
+if ! rpm -qa screen | grep -q screen; then
+  desktop_miss 'Package: screen'
+fi

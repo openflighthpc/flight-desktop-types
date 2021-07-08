@@ -1,6 +1,5 @@
-#!/bin/bash
 # =============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of Flight Desktop.
 #
@@ -25,27 +24,28 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
-set -e
 
-if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal ||
-   ! rpm -qa xorg-x11-xauth | grep -q xorg-x11-xauth; then
-  desktop_stage "Installing Flight Desktop prerequisites"
-  yum -y install tigervnc-server-minimal xorg-x11-xauth
-fi
+set -x
 
-if ! rpm -qa xorg-x11-server-utils | grep -q xorg-x11-server-utils; then
-  desktop_stage "Installing package: xorg-x11-server-utils"
-  yum -y install xorg-x11-server-utils
-fi
+# Give a moment for the terminal to load
+sleep 10
 
-if ! rpm -qa xterm | grep -q xterm; then
-  desktop_stage "Installing package: xterm"
-  yum -y install xterm
-fi
+# Get the index and id
+idx=$(echo "$flight_DESKTOP_SCRIPT_index")
+id=$(echo "$flight_DESKTOP_SCRIPT_id")
 
-if ! rpm -qa screen | grep -q screen; then
-  desktop_stage "Installing package: screen"
-  yum -y install screen
-fi
+# Remove the flight_DESKTOP_SCRIPT_* variables
+unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
 
-desktop_stage "Prequisites met"
+# Start the process in a detached screen session
+tag="flight-desktop.$idx.$id"
+screen -dmS "$tag" -- "$@"
+
+# Determine the screen ID
+screen_id=$(screen -list | grep "$tag" | cut -f2)
+
+# Determine the TTY
+tty=$(who | grep "(:1)" | cut -d' ' -f3)
+
+# Notify the user the script is running
+echo "Script Started! Attach to it with: screen -r $screen_id" >/dev/$tty

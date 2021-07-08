@@ -25,6 +25,9 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
+# Remove the flight_DESKTOP_SCRIPT_* variables
+unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
+
+# Start the script in a shell
 echo "Launching: $@"
-# NOTE: $2 is the index of the current application being launched and
-xfce4-terminal --command "${@:2}"
+xfce4-terminal --command "$@"

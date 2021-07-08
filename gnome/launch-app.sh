@@ -29,6 +29,9 @@
 echo "Preparing to launch: $@"
 sleep 30
 
+# Remove the flight_DESKTOP_SCRIPT_* variables
+unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
+
+# Start the application
 echo "Launching: $@"
-# NOTE: $1 is the index of the current application being launched and
-exec "${@:2}"
+exec "$@"

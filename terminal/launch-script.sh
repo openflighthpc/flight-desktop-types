@@ -44,7 +44,7 @@ id=$(echo "$flight_DESKTOP_SCRIPT_id")
 unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
 
 # Start the process in a detached screen session
-tag="flight-desktop.$idx.$id"
+tag="flight-desktop.$id.$idx"
 screen -dmS "$tag" -- "$@"
 
 # Determine the screen ID

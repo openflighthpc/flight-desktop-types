@@ -25,6 +25,8 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
+set -x
+
 # Give a bit *more* time for the gnome session to start
 echo "Preparing to launch: $@"
 sleep 30

@@ -24,6 +24,21 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
+
+# The following line *may* be patched with a command to be ran within the session
+# flight_desktop_script=()
+
+# Wrap the command in a "SHELL" script
+if [ -n "$flight_desktop_script" ]; then
+  shell="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/shell.sh"
+  cat >"$shell" <<EOF
+#!/bin/bash
+echo "$flight_desktop_script"
+bash -c "$flight_desktop_script"
+EOF
+  chmod u+x "$shell"
+fi
+
 # 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
 # disappear when a user types into the xterm.  In this situation, some
 # VNC clients experience a 'freeze' due to a bug with handling
@@ -32,7 +47,7 @@ echo 'XTerm*vt100.pointerMode: 0' | xrdb -merge
 vncconfig -nowin &
 
 xsetroot -solid '#081f2e'
-xterm \
+options=(
     -ls -title "Flight Desktop terminal session: $USER" \
     -rightbar \
     -xrm 'xterm*pointerMode: 0' \
@@ -81,3 +96,13 @@ xterm \
     -xrm 'Scrollbar.JumpCursor: true' \
     -xrm 'xterm.*backarrowKey: true' \
     -xrm 'xterm*VT100.translations: #override Shift Ctrl <Key>V: insert-selection(PRIMARY)'
+)
+
+# Launch the command with the shell
+if [ -n "$shell" ]; then
+  xterm "${options[@]}" "$shell"
+
+# Launch without the shell
+else
+  xterm "${options[@]}"
+fi

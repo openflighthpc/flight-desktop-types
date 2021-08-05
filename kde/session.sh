@@ -75,4 +75,9 @@ if [ -f "${bg_image}" ]; then
                 }'
   fi
 fi
+
+if [ "$1" ]; then
+  konsole -e "$@" &
+fi
+
 wait $kdepid

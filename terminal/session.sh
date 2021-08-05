@@ -24,6 +24,7 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
+
 # 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
 # disappear when a user types into the xterm.  In this situation, some
 # VNC clients experience a 'freeze' due to a bug with handling
@@ -32,7 +33,7 @@ echo 'XTerm*vt100.pointerMode: 0' | xrdb -merge
 vncconfig -nowin &
 
 xsetroot -solid '#081f2e'
-xterm \
+options=(
     -ls -title "Flight Desktop terminal session: $USER" \
     -rightbar \
     -xrm 'xterm*pointerMode: 0' \
@@ -81,3 +82,10 @@ xterm \
     -xrm 'Scrollbar.JumpCursor: true' \
     -xrm 'xterm.*backarrowKey: true' \
     -xrm 'xterm*VT100.translations: #override Shift Ctrl <Key>V: insert-selection(PRIMARY)'
+)
+
+if [ -n "$1" ]; then
+  xterm "${options[@]}" -e "$@"
+else
+  xterm "${options[@]}"
+fi

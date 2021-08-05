@@ -1,5 +1,5 @@
 # =============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of Flight Desktop.
 #
@@ -25,23 +25,11 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
-# 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
-# disappear when a user types into the xterm.  In this situation, some
-# VNC clients experience a 'freeze' due to a bug with handling
-# invisible mouse pointers (e.g. OSX Screen Sharing).
-echo 'XTerm*vt100.pointerMode: 0' | xrdb -merge
-vncconfig -nowin &
-xsetroot -fg '#2794d8' -bitmap <(
-cat <<EOF
-#define root_weave_width 4
-#define root_weave_height 4
-static char root_weave_bits[] = {
-   0x07, 0x0d, 0x0b, 0x0e};
-EOF
-)
+set -x
 
-if [ -n "$1" ]; then
-  xterm -e "$@"
-else
-  xterm
-fi
+# Remove the flight_DESKTOP_SCRIPT_* variables
+unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
+
+# Start the application
+echo "Launching: $@"
+exec "$@"

@@ -24,6 +24,7 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
+
 xdg_cache_home() {
     echo "${XDG_CACHE_HOME:-$HOME/.cache}"
 }
@@ -153,7 +154,7 @@ if [ -f /etc/redhat-release ]; then
 fi
 
 if [ "$1" ]; then
-  "$@" &
+  gnome-terminal -- "$@" &
 fi
 
 gnome-session ${_GNOME_PARAMS}

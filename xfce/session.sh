@@ -24,6 +24,7 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
+
 xdg_cache_home() {
     echo "${XDG_CACHE_HOME:-$HOME/.cache}"
 }
@@ -116,8 +117,9 @@ install_geometry_script() {
 install_geometry_script
 
 if [ "$1" ]; then
-  "$@" &
+  xfce4-terminal --command "$@" &
 fi
+
 
 unset DBUS_SESSION_BUS_ADDRESS
 xfce4-session &

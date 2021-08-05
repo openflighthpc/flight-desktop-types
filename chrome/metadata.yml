@@ -4,3 +4,4 @@
 :url: https://www.google.com/chrome/
 :arch:
   - x86_64
+:scriptable: false

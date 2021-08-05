@@ -2,3 +2,4 @@
 :summary: |
   KDE Plasma Desktop (KDE 4). Plasma is KDE's desktop environment. Simple by default, powerful when needed.
 :url: https://kde.org/
+:scriptable: true

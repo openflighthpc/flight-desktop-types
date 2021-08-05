@@ -30,6 +30,6 @@ set -x
 # Remove the flight_DESKTOP_SCRIPT_* variables
 unset $(env | grep '^flight_DESKTOP_SCRIPT_' | cut -d '=' -f1 | xargs)
 
-# Start the script in a shell
+# Start the application
 echo "Launching: $@"
-xfce4-terminal --command "$@"
+exec "$@"

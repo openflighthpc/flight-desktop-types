@@ -25,10 +25,6 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 
-postInitScript="$1"
-shift
-postInitScriptArgs="$@"
-
 # 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
 # disappear when a user types into the xterm.  In this situation, some
 # VNC clients experience a 'freeze' due to a bug with handling
@@ -44,8 +40,8 @@ static char root_weave_bits[] = {
 EOF
 )
 
-if [ -n "$postInitScript" ]; then
-  xterm -e "$postInitScript" "$postInitScriptArgs"
+if [ -n "$1" ]; then
+  xterm -e "$@"
 else
   xterm
 fi

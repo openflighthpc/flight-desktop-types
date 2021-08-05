@@ -117,7 +117,7 @@ install_geometry_script() {
 install_geometry_script
 
 if [ "$1" ]; then
-  xfce4-terminal --command "$@" &
+  xfce4-terminal --execute "$@" &
 fi
 
 

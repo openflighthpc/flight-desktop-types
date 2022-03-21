@@ -81,6 +81,12 @@ xdg_find_needle() {
     return 1
 }
 
+kill_on_script_exit=
+if [ "$1" == "--kill-on-script-exit" ] ; then
+    kill_on_script_exit=true
+    shift
+fi
+
 # 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
 # disappear when a user types into the xterm.  In this situation, some
 # VNC clients experience a 'freeze' due to a bug with handling
@@ -118,6 +124,7 @@ install_geometry_script
 
 if [ "$1" ]; then
   xfce4-terminal --execute "$@" &
+  xfce4_terminal_pid=$!
 fi
 
 
@@ -136,4 +143,10 @@ if [ "$addr" ]; then
     echo "DBUS: $DBUS_SESSION_BUS_ADDRESS"
     xfconf-query -v -c xsettings -p /Xft/HintStyle -s hintnone
 fi
-wait $xfce4_session_pid
+
+if [ "$kill_on_script_exit" == true ] ; then
+    wait $xfce4_terminal_pid
+    sleep 2
+else
+    wait $xfce4_session_pid
+fi

@@ -81,6 +81,12 @@ xdg_find_needle() {
     return 1
 }
 
+kill_on_script_exit=
+if [ "$1" == "--kill-on-script-exit" ] ; then
+    kill_on_script_exit=true
+    shift
+fi
+
 # 'Xterm*vt100.pointerMode: 0' is to ensure that the pointer does not
 # disappear when a user types into the xterm.  In this situation, some
 # VNC clients experience a 'freeze' due to a bug with handling
@@ -154,7 +160,16 @@ if [ -f /etc/redhat-release ]; then
 fi
 
 if [ "$1" ]; then
-  gnome-terminal -- "$@" &
+  gnome-terminal --wait -- "$@" &
+  gnome_terminal_pid=$!
 fi
 
-gnome-session ${_GNOME_PARAMS}
+gnome-session ${_GNOME_PARAMS} &
+gnome_session_pid=$!
+
+if [ "$kill_on_script_exit" == true ] ; then
+    wait $gnome_terminal_pid
+    sleep 2
+else
+    wait $gnome_session_pid
+fi

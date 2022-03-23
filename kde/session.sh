@@ -32,6 +32,12 @@
 echo 'XTerm*vt100.pointerMode: 0' | xrdb -merge
 vncconfig -nowin &
 
+kill_on_script_exit=
+if [ "$1" == "--kill-on-script-exit" ] ; then
+    kill_on_script_exit=true
+    shift
+fi
+
 if which startkde &>/dev/null; then
   startkde &
   kdepid=$!
@@ -77,7 +83,13 @@ if [ -f "${bg_image}" ]; then
 fi
 
 if [ "$1" ]; then
-  konsole -e "$@" &
+  konsole --nofork -e "$@" &
+  kde_terminal_pid=$!
 fi
 
-wait $kdepid
+if [ "$kill_on_script_exit" == true ] ; then
+    wait $kde_terminal_pid
+    sleep 2
+else
+    wait $kdepid
+fi

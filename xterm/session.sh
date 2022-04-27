@@ -40,6 +40,9 @@ static char root_weave_bits[] = {
 EOF
 )
 
+if [ "$1" == "--kill-on-script-exit" ] ; then
+    shift
+fi
 if [ -n "$1" ]; then
   xterm -e "$@"
 else

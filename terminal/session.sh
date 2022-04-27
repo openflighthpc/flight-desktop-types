@@ -84,6 +84,9 @@ options=(
     -xrm 'xterm*VT100.translations: #override Shift Ctrl <Key>V: insert-selection(PRIMARY)'
 )
 
+if [ "$1" == "--kill-on-script-exit" ] ; then
+    shift
+fi
 if [ -n "$1" ]; then
   xterm "${options[@]}" -e "$@"
 else

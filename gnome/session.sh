@@ -123,7 +123,7 @@ install_geometry_script() {
   local f destdir geom_sh
 
   f="flight-desktop_geometry.sh"
-  if ! geom_sh=$(xdg_data_search fight-desktop/bin/$f); then
+  if ! geom_sh=$(xdg_data_search flight/desktop/bin/$f); then
     destdir="$(xdg_data_home)/flight/desktop/bin"
     geom_sh="${destdir}/${f}"
     mkdir -p "${destdir}"

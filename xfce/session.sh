@@ -104,21 +104,23 @@ install_geometry_script() {
 
   f="flight-desktop_geometry.sh"
   if ! geom_sh=$(xdg_data_search flight/desktop/bin/$f); then
-      destdir="$(xdg_data_home)/flight/desktop/bin"
-      geom_sh="${destdir}/${f}"
-      mkdir -p "${destdir}"
-      cp "${cw_ROOT}"/etc/sessions/xfce/${f} "${geom_sh}"
-      chmod 755 "${geom_sh}"
+    destdir="$(xdg_data_home)/flight/desktop/bin"
+    geom_sh="${destdir}/${f}"
+    mkdir -p "${destdir}"
+    cp "${flight_DESKTOP_type_root}"/${f} "${geom_sh}"
+    chmod 755 "${geom_sh}"
   fi
 
   f="flight-desktop_geometry.desktop"
   if ! xdg_config_search autostart/$f; then
-      destdir="$(xdg_config_home)/autostart"
-      mkdir -p "$destdir"
-      cp "${cw_ROOT}"/etc/sessions/xfce/${f}.tpl "${destdir}/${f}"
-      sed -i -e "s,_FLIGHT_DESKTOP_GEOMETRY_SH_,${geom_sh},g" "${destdir}/${f}"
+    destdir="$(xdg_config_home)/autostart"
+    mkdir -p "$destdir"
+    cp "${flight_DESKTOP_type_root}"/${f}.tpl "${destdir}/${f}"
+    sed -i -e "s,_FLIGHT_DESKTOP_GEOMETRY_SH_,${geom_sh},g" "${destdir}/${f}"
   fi
 }
+
+flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc/types/xfce}"
 
 install_geometry_script
 

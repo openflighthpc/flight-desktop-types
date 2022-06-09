@@ -4,3 +4,4 @@
 :url: https://www.gnome.org/
 :default: true
 :scriptable: true
+:resizable: true

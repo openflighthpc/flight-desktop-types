@@ -2,3 +2,4 @@
 :summary: |
   Preconfigured terminal for Flight HPC environments.
 :scriptable: true
+:resizable: false

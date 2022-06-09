@@ -3,3 +3,4 @@
   Minimal desktop environment with an xterm terminal window.
 :url: https://invisible-island.net/xterm/xterm.html
 :scriptable: true
+:resizable: false

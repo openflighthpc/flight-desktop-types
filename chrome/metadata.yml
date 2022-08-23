@@ -6,3 +6,5 @@
   - x86_64
 :scriptable: false
 :resizable: false
+:hidden: true
+

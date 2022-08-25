@@ -52,15 +52,15 @@ IFS=$'\n' groups=(
 )
 
 if [ "$distro" == "rhel8" ]; then
-  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^*epel'; then
+  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_stage "Enabling repository: EPEL"
     yum -y install epel-release
     yum makecache
   fi
 
-  if ! yum repolist | grep -q '^PowerTools'; then
-    desktop_stage "Enabling repository: PowerTools"
-    yum config-manager --set-enabled PowerTools
+  if ! yum repolist | grep -q '^powertools'; then
+    desktop_stage "Enabling repository: powertools"
+    yum config-manager --set-enabled powertools
     yum makecache
   fi
 
@@ -82,11 +82,7 @@ fi
 
 if ! contains 'KDE' "${groups[@]}"; then
   desktop_stage "Installing package group: KDE"
-  if [ "$distro" == "rhel8" ]; then
-    yum --enablerepo=epel --disablerepo=epel-* -y groupinstall 'KDE'
-  else
-    yum -y groupinstall 'KDE'
-  fi
+  yum -y groupinstall 'KDE'
 fi
 
 if ! rpm -qa evince | grep -q evince; then

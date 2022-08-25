@@ -4,3 +4,5 @@
 :url: https://invisible-island.net/xterm/xterm.html
 :scriptable: true
 :resizable: false
+:disabled: true
+

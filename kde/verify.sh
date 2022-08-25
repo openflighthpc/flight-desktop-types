@@ -53,13 +53,13 @@ IFS=$'\n' groups=(
 
 if [ "$distro" == "rhel8" ]; then
   desktop_stage "Repository: EPEL"
-  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^*epel'; then
+  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'
   fi
 
-  desktop_stage "Repository: PowerTools"
-  if ! yum repolist | grep -q '^PowerTools'; then
-    desktop_miss "Repository: PowerTools"
+  desktop_stage "Repository: powertools"
+  if ! yum repolist | grep -q '^powertools'; then
+    desktop_miss "Repository: powertools"
   fi
 
   desktop_stage "Package group: base-x"

@@ -36,6 +36,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'Stream' /etc/redhat-release; then
+  stream=true
+fi
+
 desktop_stage "Flight Desktop prerequisites"
 if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal; then
   desktop_miss 'Package: tigervnc-server-minimal'
@@ -55,6 +59,13 @@ if [ "$distro" == "rhel8" ]; then
   desktop_stage "Repository: EPEL"
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'
+  fi
+
+  if [ "$stream" == "true" ]; then
+    desktop_stage "Repository: EPEL Next"
+    if ! yum --disablerepo=epel* --enablerepo=epel-next repolist | grep -q '^epel-next'; then
+      desktop_miss 'Repository: EPEL Next'
+    fi
   fi
 
   desktop_stage "Repository: powertools"

@@ -38,6 +38,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'Stream' /etc/redhat-release; then
+  stream=true
+fi
+
 if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal ||
    ! rpm -qa xorg-x11-xauth | grep -q xorg-x11-xauth; then
   desktop_stage "Installing Flight Desktop prerequisites"
@@ -56,6 +60,14 @@ if [ "$distro" == "rhel8" ]; then
     desktop_stage "Enabling repository: EPEL"
     yum -y install epel-release
     yum makecache
+  fi
+
+  if [ "$stream" == "true" ]; then
+    if ! yum --disablerepo=epel* --enablerepo=epel-next repolist | grep -q '^epel-next'; then
+      desktop_stage "Enabling repository: EPEL Next"
+      yum -y install epel-release epel-next-release
+      yum makecache
+    fi
   fi
 
   if ! yum repolist | grep -q '^powertools'; then

@@ -47,13 +47,14 @@ fi
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
-      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' 
- )
+      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' | \
+      tr '[:upper:]' '[:lower:]'
+  )
 )
 
 desktop_stage "Repository: EPEL"
 if [ "$distro" == "rhel8" ]; then
-  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^*epel'; then
+  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'
   fi
 else
@@ -63,7 +64,7 @@ else
 fi
 
 desktop_stage "Package group: Xfce"
-if ! contains 'Xfce' "${groups[@]}"; then
+if ! contains 'xfce' "${groups[@]}"; then
   desktop_miss 'Package group: Xfce'
 fi
 

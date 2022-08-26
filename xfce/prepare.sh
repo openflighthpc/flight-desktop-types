@@ -47,12 +47,13 @@ fi
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
-      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//'
+      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' | \
+      tr '[:upper:]' '[:lower:]'
   )
 )
 
 if [ "$distro" == "rhel8" ]; then
-  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^*epel'; then
+  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_stage "Enabling repository: EPEL"
     yum -y install epel-release
     yum makecache
@@ -65,7 +66,7 @@ else
   fi
 fi
 
-if ! contains 'Xfce' "${groups[@]}"; then
+if ! contains 'xfce' "${groups[@]}"; then
   desktop_stage "Installing package group: Xfce"
   yum --enablerepo=epel --disablerepo=epel-* -y groupinstall 'Xfce'
 fi

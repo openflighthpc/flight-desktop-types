@@ -47,13 +47,19 @@ fi
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
-      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//'
+      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' | \
+      tr '[:upper:]' '[:lower:]'
   )
 )
 
-desktop_stage "Prerequisite: polkit policies"
-if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/20-flight-desktop-gnome.pkla ]; then
-  desktop_miss 'Configuration: polkit policies'
+if [ $UID == 0 ]; then
+  # This verification can only be successfully performed by the
+  # superuser due to permissions on the `/etc/polkit-1/localauthority`
+  # directory.
+  desktop_stage "Prerequisite: polkit policies"
+  if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/20-flight-desktop-gnome.pkla ]; then
+    desktop_miss 'Configuration: polkit policies'
+  fi
 fi
 
 if [ "$distro" == "rhel8" ]; then
@@ -63,18 +69,18 @@ if [ "$distro" == "rhel8" ]; then
   fi
 else
   desktop_stage "Package group: X Window System"
-  if ! contains 'X Window System' "${groups[@]}"; then
+  if ! contains 'x window system' "${groups[@]}"; then
     desktop_miss 'Package group: X Window System'
   fi
 fi
 
 desktop_stage "Package group: Fonts"
-if ! contains 'Fonts' "${groups[@]}"; then
+if ! contains 'fonts' "${groups[@]}"; then
   desktop_miss 'Package group: Fonts'
 fi
 
 desktop_stage "Package group: GNOME"
-if ! contains 'GNOME' "${groups[@]}"; then
+if ! contains 'gnome' "${groups[@]}"; then
   desktop_miss 'Package group: GNOME'
 fi
 

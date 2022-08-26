@@ -51,7 +51,8 @@ fi
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
-      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//'
+      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' | \
+      tr '[:upper:]' '[:lower:]'
   )
 )
 
@@ -79,18 +80,18 @@ if [ "$distro" == "rhel8" ]; then
   fi
 else
   desktop_stage "Package group: X Window System"
-  if ! contains 'X Window System' "${groups[@]}"; then
+  if ! contains 'x window system' "${groups[@]}"; then
     desktop_miss 'Package group: X Window System'
   fi
 fi
 
 desktop_stage "Package group: Fonts"
-if ! contains 'Fonts' "${groups[@]}"; then
+if ! contains 'fonts' "${groups[@]}"; then
   desktop_miss 'Package group: Fonts'
 fi
 
 desktop_stage "Package group: KDE"
-if ! contains 'KDE' "${groups[@]}"; then
+if ! contains 'kde' "${groups[@]}"; then
   desktop_miss 'Package group: KDE'
 fi
 

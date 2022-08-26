@@ -51,7 +51,8 @@ fi
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
-      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//'
+      sed '/^Installed Groups:/,$!d;/^Available Groups:/,$d;/^Installed Groups:/d;s/^[[:space:]]*//' | \
+      tr '[:upper:]' '[:lower:]'
   )
 )
 
@@ -81,18 +82,18 @@ if [ "$distro" == "rhel8" ]; then
     yum -y groupinstall 'base-x'
   fi
 else
-  if ! contains 'X Window System' "${groups[@]}"; then
+  if ! contains 'x window system' "${groups[@]}"; then
     desktop_stage "Installing package group: X Window System"
     yum -y groupinstall 'X Window System'
   fi
 fi
 
-if ! contains 'Fonts' "${groups[@]}"; then
+if ! contains 'fonts' "${groups[@]}"; then
   desktop_stage "Installing package group: Fonts"
   yum -y groupinstall 'Fonts'
 fi
 
-if ! contains 'KDE' "${groups[@]}"; then
+if ! contains 'kde' "${groups[@]}"; then
   desktop_stage "Installing package group: KDE"
   yum -y groupinstall 'KDE'
 fi

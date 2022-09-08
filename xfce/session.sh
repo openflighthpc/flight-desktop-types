@@ -99,6 +99,45 @@ destdir="$(xdg_config_home)/xfce4/xfconf/xfce-perchannel-xml"
 mkdir -p "${destdir}"
 cp /etc/xdg/xfce4/panel/default.xml "${destdir}"/xfce4-panel.xml
 
+remove_obsolete_background_script() {
+  local f destdir
+
+  f="flight-desktop_background.desktop"
+  destdir="$(xdg_config_home)/autostart"
+  if [ -f "${destdir}/${f}" ] ; then
+    rm -f "${destdir}/${f}"
+  fi
+
+  f="flight-desktop_background.sh"
+  destdir="$(xdg_data_home)/flight/desktop/bin"
+  if [ -f "${destdir}/${f}" ] ; then
+    rm -f "${destdir}/${f}"
+  fi
+}
+
+install_background_script() {
+  local f destdir geom_sh
+
+  bg_image="${flight_DESKTOP_bg_image:-${flight_DESKTOP_root}/etc/assets/backgrounds/default.jpg}"
+  if [ -f "${bg_image}" ]; then
+    f="flight-desktop_xfce_background.sh"
+    destdir="$(xdg_data_home)/flight/desktop/bin"
+    bg_sh="${destdir}/${f}"
+    mkdir -p "${destdir}"
+    sed -e "s,_IMAGE_,${bg_image},g" \
+        "${flight_DESKTOP_type_root}"/${f}.tpl > "${bg_sh}"
+    chmod 755 "${bg_sh}"
+
+    f="flight-desktop_xfce_background.desktop"
+    if ! xdg_config_search autostart/$f; then
+      destdir="$(xdg_config_home)/autostart"
+      mkdir -p "$destdir"
+      cp "${flight_DESKTOP_type_root}"/${f}.tpl "${destdir}/${f}"
+      sed -i -e "s,_FLIGHT_DESKTOP_BACKGROUND_SH_,${bg_sh},g" "${destdir}/${f}"
+    fi
+  fi
+}
+
 install_geometry_script() {
   local f destdir geom_sh
 
@@ -123,6 +162,8 @@ install_geometry_script() {
 flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc/types/xfce}"
 
 install_geometry_script
+remove_obsolete_background_script
+install_background_script
 
 if [ "$1" ]; then
   xfce4-terminal --execute "$@" &

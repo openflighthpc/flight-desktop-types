@@ -96,12 +96,28 @@ vncconfig -nowin &
 # Disable gnome-screensaver
 gconftool-2 --set -t boolean /apps/gnome-screensaver/idle_activation_enabled false
 
+remove_obsolete_background_script() {
+  local f destdir
+
+  f="flight-desktop_background.desktop"
+  destdir="$(xdg_config_home)/autostart"
+  if [ -f "${destdir}/${f}" ] ; then
+    rm -f "${destdir}/${f}"
+  fi
+
+  f="flight-desktop_background.sh"
+  destdir="$(xdg_data_home)/flight/desktop/bin"
+  if [ -f "${destdir}/${f}" ] ; then
+    rm -f "${destdir}/${f}"
+  fi
+}
+
 install_background_script() {
   local f destdir geom_sh
 
   bg_image="${flight_DESKTOP_bg_image:-${flight_DESKTOP_root}/etc/assets/backgrounds/default.jpg}"
   if [ -f "${bg_image}" ]; then
-    f="flight-desktop_background.sh"
+    f="flight-desktop_gnome_background.sh"
     destdir="$(xdg_data_home)/flight/desktop/bin"
     bg_sh="${destdir}/${f}"
     mkdir -p "${destdir}"
@@ -109,7 +125,7 @@ install_background_script() {
         "${flight_DESKTOP_type_root}"/${f}.tpl > "${bg_sh}"
     chmod 755 "${bg_sh}"
 
-    f="flight-desktop_background.desktop"
+    f="flight-desktop_gnome_background.desktop"
     if ! xdg_config_search autostart/$f; then
       destdir="$(xdg_config_home)/autostart"
       mkdir -p "$destdir"
@@ -152,6 +168,7 @@ mark_initial_setup_done() {
 flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc/types/gnome}"
 
 install_geometry_script
+remove_obsolete_background_script
 install_background_script
 mark_initial_setup_done
 if [ -f /etc/redhat-release ]; then

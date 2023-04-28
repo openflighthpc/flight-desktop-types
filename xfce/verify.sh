@@ -36,6 +36,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 desktop_stage "Flight Desktop prerequisites"
 if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal; then
   desktop_miss 'Package: tigervnc-server-minimal'
@@ -53,7 +57,7 @@ IFS=$'\n' groups=(
 )
 
 desktop_stage "Repository: EPEL"
-if [ "$distro" == "rhel8" ]; then
+if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9" ]; then
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'
   fi

@@ -38,6 +38,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal ||
    ! rpm -qa xorg-x11-xauth | grep -q xorg-x11-xauth; then
   desktop_stage "Installing Flight Desktop prerequisites"
@@ -52,7 +56,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ]; then
+if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9"] ; then
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_stage "Enabling repository: EPEL"
     yum -y install epel-release

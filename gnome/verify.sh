@@ -36,6 +36,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 desktop_stage "Flight Desktop prerequisites"
 if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal; then
   desktop_miss 'Package: tigervnc-server-minimal'
@@ -62,7 +66,7 @@ if [ $UID == 0 ]; then
   fi
 fi
 
-if [ "$distro" == "rhel8" ]; then
+if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9"]; then
   desktop_stage "Package group: base-x"
   if ! contains 'base-x' "${groups[@]}"; then
     desktop_miss 'Package group: base-x'

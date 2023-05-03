@@ -38,6 +38,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 if [ -f /etc/redhat-release ] && grep -q 'Stream' /etc/redhat-release; then
   stream=true
 fi
@@ -81,6 +85,31 @@ if [ "$distro" == "rhel8" ]; then
     desktop_stage "Installing package group: base-x"
     yum -y groupinstall 'base-x'
   fi
+elif [ "$distro" == "rhel9" ]; then
+  if [ "$stream" == "true" ]; then
+    if ! yum --disablerepo=epel* --enablerepo=epel-next repolist | grep -q '^epel-next'; then
+      desktop_stage "Enabling repository: EPEL Next"
+      yum -y install epel-release epel-next-release
+      yum makecache
+    fi
+  fi
+
+  if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
+    desktop_stage "Enabling repository: EPEL"
+    yum -y install epel-release
+    yum makecache
+  fi
+
+  if ! yum repolist | grep -q '^crb'; then
+    desktop_stage "Enabling repository: CRB"
+    yum config-manager --set-enabled crb
+    yum makecache
+  fi
+
+  if ! contains 'base-x' "${groups[@]}"; then
+    desktop_stage "Installing package group: base-x"
+    yum -y groupinstall 'base-x'
+  fi
 else
   if ! contains 'x window system' "${groups[@]}"; then
     desktop_stage "Installing package group: X Window System"
@@ -93,9 +122,16 @@ if ! contains 'fonts' "${groups[@]}"; then
   yum -y groupinstall 'Fonts'
 fi
 
-if ! contains 'kde' "${groups[@]}"; then
-  desktop_stage "Installing package group: KDE"
-  yum -y groupinstall 'KDE'
+if [ "$distro" == "rhel9" ]; then
+  if ! contains 'kde' "${groups[@]}"; then
+    desktop_stage "Installing package group: KDE Plasma Workspaces"
+    yum -y groupinstall 'KDE Plasma Workspaces'
+  fi
+else
+  if ! contains 'kde' "${groups[@]}"; then
+    desktop_stage "Installing package group: KDE"
+    yum -y groupinstall 'KDE'
+  fi
 fi
 
 if ! rpm -qa evince | grep -q evince; then

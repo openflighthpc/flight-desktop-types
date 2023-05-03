@@ -56,7 +56,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9"] ; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]] ; then
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_stage "Enabling repository: EPEL"
     yum -y install epel-release

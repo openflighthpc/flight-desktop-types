@@ -97,7 +97,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9"]; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
   if ! contains 'base-x' "${groups[@]}"; then
     desktop_stage "Installing package group: base-x"
     yum -y groupinstall 'base-x'

@@ -60,7 +60,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9" ]; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
   desktop_stage "Repository: EPEL"
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'

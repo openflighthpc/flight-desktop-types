@@ -66,7 +66,7 @@ if [ $UID == 0 ]; then
   fi
 fi
 
-if [ "$distro" == "rhel8" ] || [ "$distro" == "rhel9"]; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
   desktop_stage "Package group: base-x"
   if ! contains 'base-x' "${groups[@]}"; then
     desktop_miss 'Package group: base-x'

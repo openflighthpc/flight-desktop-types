@@ -73,9 +73,18 @@ if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
     fi
   fi
 
-  desktop_stage "Repository: powertools"
-  if ! yum repolist | grep -q '^powertools'; then
-    desktop_miss "Repository: powertools"
+  if [ "$distro" == "rhel8" ]; then
+    desktop_stage "Repository: powertools"
+    if ! yum repolist | grep -q '^powertools'; then
+      desktop_miss "Repository: powertools"
+    fi
+  fi
+
+  if [ "$distro" == "rhel9" ]; then
+    desktop_stage "Repository: crb"
+    if ! yum repolist | grep -q '^powertools'; then
+      desktop_miss "Repository: crb"
+    fi
   fi
 
   desktop_stage "Package group: base-x"

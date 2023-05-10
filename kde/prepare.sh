@@ -125,7 +125,11 @@ fi
 if [ "$distro" == "rhel9" ]; then
   if ! contains 'kde' "${groups[@]}"; then
     desktop_stage "Installing package group: KDE Plasma Workspaces"
-    yum -y groupinstall 'KDE Plasma Workspaces'
+    if [ "$stream" == "true" ]; then
+      yum -y groupinstall 'KDE Plasma Workspaces' --nobest --allowerasing
+    else
+      yum -y groupinstall 'KDE Plasma Workspaces'
+    fi
   fi
 else
   if ! contains 'kde' "${groups[@]}"; then

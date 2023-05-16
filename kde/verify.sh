@@ -82,7 +82,7 @@ if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
 
   if [ "$distro" == "rhel9" ]; then
     desktop_stage "Repository: crb"
-    if ! yum repolist | grep -q '^powertools'; then
+    if ! yum repolist | grep -q '^crb'; then
       desktop_miss "Repository: crb"
     fi
   fi

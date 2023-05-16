@@ -154,7 +154,7 @@ flight_DESKTOP_type_root="${flight_DESKTOP_type_root:-${flight_DESKTOP_root}/etc
 install_geometry_script
 install_background_script
 mark_initial_setup_done
-if [ -f /etc/redhat-release ]; then
+if [ -f /etc/redhat-release ] && ! grep -q 'release 9' /etc/redhat-release; then
   export GNOME_SHELL_SESSION_MODE=classic
   _GNOME_PARAMS="--session=gnome-classic"
 fi

@@ -83,4 +83,9 @@ if ! apt -qq --installed list firefox | grep -q firefox; then
   apt -y install firefox
 fi
 
+if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then
+  desktop_stage "Disabling service: KDE Connect"
+  mv /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop.disabled
+fi
+
 desktop_stage "Prequisites met"

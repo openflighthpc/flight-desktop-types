@@ -155,7 +155,7 @@ if [ "$distro" == "rhel9" ]; then
     else
       yum -y groupinstall 'KDE Plasma Workspaces'
     fi
-    if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then 
+    if rpm -qa kdeconnectd | grep -q kdeconnectd ; then
       desktop_stage "Removing package: KDE Connect"
       yum -y remove kdeconnectd
     fi

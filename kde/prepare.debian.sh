@@ -88,4 +88,9 @@ if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then
   mv /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop.disabled
 fi
 
+if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ] ; then
+  desktop_stage "Disabling service: KDE Discover"
+  mv /etc/xdg/autostart/org.kde.discover.notifier.desktop /etc/xdg/autostart/org.kde.discover.notifier.desktop.disabled
+fi
+
 desktop_stage "Prequisites met"

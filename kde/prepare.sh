@@ -155,6 +155,14 @@ if [ "$distro" == "rhel9" ]; then
     else
       yum -y groupinstall 'KDE Plasma Workspaces'
     fi
+    if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then 
+      desktop_stage "Removing package: KDE Connect"
+      yum -y remove kdeconnectd
+    fi
+    if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ] ; then 
+      desktop_stage "Disabling service: KDE Discover"
+      mv /etc/xdg/autostart/org.kde.discover.notifier.desktop /etc/xdg/autostart/org.kde.discover.notifier.desktop.disabled
+    fi
   fi
 else
   if ! contains 'kde' "${groups[@]}"; then
@@ -171,16 +179,6 @@ fi
 if ! rpm -qa firefox | grep -q firefox; then
   desktop_stage "Installing package: firefox"
   yum -y install firefox
-fi
-
-if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then 
-  desktop_stage "Disabling service: KDE Connect"
-  mv /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop.disabled
-fi
-
-if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ] ; then 
-  desktop_stage "Disabling service: KDE Discover"
-  mv /etc/xdg/autostart/org.kde.discover.notifier.desktop /etc/xdg/autostart/org.kde.discover.notifier.desktop.disabled
 fi
 
 desktop_stage "Prequisites met"

@@ -27,10 +27,35 @@
 # ==============================================================================
 set -e
 
+set_policies() {
+    mkdir -p /etc/polkit-1/localauthority/10-vendor.d
+    # disable authentication prompts for all users
+    cat <<EOF > /etc/polkit-1/localauthority/10-vendor.d/15-flight-desktop-users.pkla
+[Flight Desktop - disable create color managed device auth prompt for all users]
+Identity=unix-user:*
+Action=org.freedesktop.color-manager.create-device
+ResultAny=no
+ResultInactive=no
+ResultActive=no
+
+[Flight Desktop - disable network connections prompt for all users]
+Identity=unix-user:*
+Action=org.freedesktop.NetworkManager.network-control
+ResultAny=no
+ResultInactive=no
+ResultActive=no
+EOF
+}
+
 if ! apt -qq --installed list tigervnc-common | grep -q tigervnc-common ||
     ! apt -qq --installed list xauth | grep -q xauth; then
   desktop_stage "Installing Flight Desktop prerequisites"
   apt -y install tigervnc-common xauth
+fi
+
+if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/15-flight-desktop-users.pkla ]; then
+  desktop_stage "Setting up polkit policies"
+  set_policies
 fi
 
 if ! apt -qq --installed list plasma-desktop | grep -q plasma-desktop; then
@@ -56,6 +81,16 @@ fi
 if ! apt -qq --installed list firefox | grep -q firefox; then
   desktop_stage "Installing package: firefox"
   apt -y install firefox
+fi
+
+if [ -f /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop ] ; then
+  desktop_stage "Disabling service: KDE Connect"
+  mv /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop /etc/xdg/autostart/org.kde.kdeconnect.daemon.desktop.disabled
+fi
+
+if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ] ; then
+  desktop_stage "Disabling service: KDE Discover"
+  mv /etc/xdg/autostart/org.kde.discover.notifier.desktop /etc/xdg/autostart/org.kde.discover.notifier.desktop.disabled
 fi
 
 desktop_stage "Prequisites met"

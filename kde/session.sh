@@ -87,6 +87,15 @@ if [ "$1" ]; then
   kde_terminal_pid=$!
 fi
 
+if which kwriteconfig5 &>/dev/null; then
+    if [ "$(kreadconfig5 --file kscreenlockerrc --group Daemon --key Autolock)" != "false" ]; then
+	# Disable screen locking under KDE5
+	sleep 5
+	kwriteconfig5 --file kscreenlockerrc --group Daemon --key Autolock false
+	qdbus-qt5 org.freedesktop.ScreenSaver /ScreenSaver configure
+    fi
+fi
+
 if [ "$kill_on_script_exit" == true ] ; then
     wait $kde_terminal_pid
     sleep 2

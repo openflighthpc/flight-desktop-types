@@ -34,6 +34,26 @@ contains() {
   return 1
 }
 
+set_policies() {
+    mkdir -p /etc/polkit-1/localauthority/10-vendor.d
+    # disable authentication prompts for all users
+    cat <<EOF > /etc/polkit-1/localauthority/10-vendor.d/15-flight-desktop-users.pkla
+[Flight Desktop - disable create color managed device auth prompt for all users]
+Identity=unix-user:*
+Action=org.freedesktop.color-manager.create-device
+ResultAny=no
+ResultInactive=no
+ResultActive=no
+
+[Flight Desktop - disable network connections prompt for all users]
+Identity=unix-user:*
+Action=org.freedesktop.NetworkManager.network-control
+ResultAny=no
+ResultInactive=no
+ResultActive=no
+EOF
+}
+
 if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
@@ -50,6 +70,11 @@ if ! rpm -qa tigervnc-server-minimal | grep -q tigervnc-server-minimal ||
    ! rpm -qa xorg-x11-xauth | grep -q xorg-x11-xauth; then
   desktop_stage "Installing Flight Desktop prerequisites"
   yum -y install tigervnc-server-minimal xorg-x11-xauth
+fi
+
+if ! [ -f /etc/polkit-1/localauthority/10-vendor.d/15-flight-desktop-users.pkla ]; then
+  desktop_stage "Setting up polkit policies"
+  set_policies 
 fi
 
 IFS=$'\n' groups=(
@@ -129,6 +154,14 @@ if [ "$distro" == "rhel9" ]; then
       yum -y groupinstall 'KDE Plasma Workspaces' --nobest --allowerasing
     else
       yum -y groupinstall 'KDE Plasma Workspaces'
+    fi
+    if rpm -qa kdeconnectd | grep -q kdeconnectd ; then
+      desktop_stage "Removing package: KDE Connect"
+      yum -y remove kdeconnectd
+    fi
+    if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ] ; then 
+      desktop_stage "Disabling service: KDE Discover"
+      mv /etc/xdg/autostart/org.kde.discover.notifier.desktop /etc/xdg/autostart/org.kde.discover.notifier.desktop.disabled
     fi
   fi
 else

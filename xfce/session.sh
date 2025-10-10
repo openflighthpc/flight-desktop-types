@@ -146,6 +146,9 @@ if [ "$addr" ]; then
     xfconf-query -v -c xsettings -p /Xft/HintStyle -s hintnone
 fi
 
+# Ensure screensaver is disabled
+xfconf-query -c xfce4-screensaver -p /saver/enabled -s false
+
 if [ "$kill_on_script_exit" == true ] ; then
     wait $xfce4_terminal_pid
     sleep 2

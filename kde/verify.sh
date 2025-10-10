@@ -36,6 +36,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 if [ -f /etc/redhat-release ] && grep -q 'Stream' /etc/redhat-release; then
   stream=true
 fi
@@ -56,7 +60,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ]; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
   desktop_stage "Repository: EPEL"
   if ! yum --enablerepo=epel --disablerepo=epel-* repolist | grep -q '^epel'; then
     desktop_miss 'Repository: EPEL'
@@ -69,9 +73,18 @@ if [ "$distro" == "rhel8" ]; then
     fi
   fi
 
-  desktop_stage "Repository: powertools"
-  if ! yum repolist | grep -q '^powertools'; then
-    desktop_miss "Repository: powertools"
+  if [ "$distro" == "rhel8" ]; then
+    desktop_stage "Repository: powertools"
+    if ! yum repolist | grep -q '^powertools'; then
+      desktop_miss "Repository: powertools"
+    fi
+  fi
+
+  if [ "$distro" == "rhel9" ]; then
+    desktop_stage "Repository: crb"
+    if ! yum repolist | grep -q '^crb'; then
+      desktop_miss "Repository: crb"
+    fi
   fi
 
   desktop_stage "Package group: base-x"

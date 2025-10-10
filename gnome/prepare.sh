@@ -85,6 +85,10 @@ if [ -f /etc/redhat-release ] && grep -q 'release 8' /etc/redhat-release; then
   distro=rhel8
 fi
 
+if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+  distro=rhel9
+fi
+
 IFS=$'\n' groups=(
   $(
     yum grouplist hidden | \
@@ -93,7 +97,7 @@ IFS=$'\n' groups=(
   )
 )
 
-if [ "$distro" == "rhel8" ]; then
+if [[ "$distro" == "rhel8" || "$distro" == "rhel9" ]]; then
   if ! contains 'base-x' "${groups[@]}"; then
     desktop_stage "Installing package group: base-x"
     yum -y groupinstall 'base-x'

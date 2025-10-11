@@ -147,7 +147,8 @@ if [ "$addr" ]; then
 fi
 
 # Ensure screensaver is disabled
-xfconf-query -c xfce4-screensaver -p /saver/enabled -s false
+xfconf-query -c xfce4-screensaver -n -p /saver/enabled -t bool -s false
+xfconf-query -c xfce4-screensaver -n -p /lock/enabled -t bool -s false
 
 if [ "$kill_on_script_exit" == true ] ; then
     wait $xfce4_terminal_pid
